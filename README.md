@@ -1,4 +1,3 @@
-[readme.md](https://github.com/user-attachments/files/22602944/readme.md)
 # Caring AI Bot
 
 Telegram-бот для ведения дневника здоровья и получения AI-аналитики/рекомендаций.
