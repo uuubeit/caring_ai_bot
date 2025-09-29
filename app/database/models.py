@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey,text,Index
 import enum
 import datetime
 
-class gender(enum.Enum):
+class Gender(enum.Enum):
     male="male"
     female="female"
 
@@ -19,7 +19,7 @@ class User(Base):
     id_tg:Mapped[int]=mapped_column(primary_key=True)
     name:Mapped[str]
     age:Mapped[int]=mapped_column(SMALLINT)
-    gender:Mapped[gender]
+    gender:Mapped[Gender]
     study:Mapped[bool]
     work:Mapped[bool]
     sport:Mapped[bool]
@@ -34,7 +34,7 @@ class Note(Base):
     message_food:Mapped[str]
     message_mood:Mapped[str]
     message_activity:Mapped[str]
-    ai_recomendation:Mapped[str]=mapped_column(nullable=True)
+    ai_recommendation:Mapped[str]=mapped_column(nullable=True)
     created_at:Mapped[datetime.datetime]=mapped_column(server_default=text("DATETIME('now', '+3 hours')"))
 
     __table_args__=(

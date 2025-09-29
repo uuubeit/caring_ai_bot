@@ -19,13 +19,12 @@ class Reg_state(StatesGroup):
     gender = State()
     activity = State()
 
-class Note_state(StatesGroup):
-    sleep=State()
-    food=State()
-    mood=State()
-    activity=State()
-    
 
+class Note_state(StatesGroup):
+    sleep = State()
+    food = State()
+    mood = State()
+    activity = State()
 
 
 class Gender_CB(CallbackData, prefix="gender_"):
@@ -38,18 +37,36 @@ class Activities_CB(CallbackData, prefix="activity_"):
     sport: bool = field(default=False)
 
 
-start_kb=InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="Начать регистрацию", callback_data="start_registration")]
-])
+start_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                text="Начать регистрацию", callback_data="start_registration"
+            )
+        ]
+    ]
+)
 
-add_note_kb=InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="Добавить запись", callback_data="add_note")]
-])
-menu_kb=InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="Добавить новую запись", callback_data="add_note")],
-    [InlineKeyboardButton(text="Посмотреть прошлые записи", callback_data="view_past_note")],
-    [InlineKeyboardButton(text="Получить AI-отчёт за неделю", callback_data="get_report_week")]
-])
+add_note_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="Добавить запись", callback_data="add_note")]
+    ]
+)
+menu_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="Добавить новую запись", callback_data="add_note")],
+        [
+            InlineKeyboardButton(
+                text="Посмотреть прошлые записи", callback_data="view_past_note"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Получить AI-отчёт за неделю", callback_data="get_report_week"
+            )
+        ],
+    ]
+)
 
 choose_gender_kb = InlineKeyboardMarkup(
     inline_keyboard=[
@@ -98,6 +115,7 @@ confirm_kb = InlineKeyboardMarkup(
         [InlineKeyboardButton(text="Отмена", callback_data="cancel_registration")],
     ]
 )
+
 
 def escape_md(text: str) -> str:
     """

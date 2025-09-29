@@ -3,16 +3,16 @@ from sqlalchemy import select
 from app.database.database_manager import async_session_factory
 from app.database.models import User, Note
 
-
+from typing import Sequence
 
 async def insert_recom(note_id: int, response: str):
     async with async_session_factory() as session:
         note = await session.get(Note, note_id)
-        note.ai_recomendation = response
+        note.ai_recommendation = response
         await session.commit()
 
 
-async def get_last_notes(user_id: int, limit_notes: int):
+async def get_last_notes(user_id: int, limit_notes: int) -> Sequence:
     query = (
         select(
             Note.message_sleep,
@@ -64,7 +64,7 @@ async def get_activities_user(user_id: int) -> dict:
         return result.all()[0]
 
 
-async def insert_note(user_id: int, sleep: str, food: str, mood: str, activity: str):
+async def insert_note(user_id: int, sleep: str, food: str, mood: str, activity: str) -> int:
     note = Note(
         user_id_tg=user_id,
         message_sleep=sleep,

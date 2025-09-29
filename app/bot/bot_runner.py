@@ -3,6 +3,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from app.bot.handlers.main_handlers import main_router
 from app.bot.handlers.registration_handlers import reg_router
 from app.bot.handlers.note_handlers import note_router
+from app.utils.logger import logger
 from config import TOKEN
 
 
@@ -16,8 +17,9 @@ dp.include_router(note_router)
 
 async def bot_main():
     try:
-        print("The bot is running...")
+        logger.info("The bot is running...")
         await dp.start_polling(bot, skip_updates=True)
     finally:
+        logger.info("The bot session is closed")
         await bot.session.close()
         await storage.close()

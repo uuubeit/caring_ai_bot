@@ -3,18 +3,19 @@ from aiogram.fsm.context import FSMContext
 from aiogram import Router, F
 
 from html import escape
-from app.bot.ui import  Note_state
+from app.bot.ui import Note_state
 from app.database.queries import (
     insert_note,
     get_activities_user,
     get_user_info,
     get_last_notes,
-    insert_recom
+    insert_recom,
 )
-from app.ai.ai_manager import get_content_steam
+from app.ai.ai_manager import get_content_stream
 
 
 note_router = Router()
+
 
 @note_router.callback_query(F.data == "add_note")
 async def add_note(callback: CallbackQuery, state: FSMContext):
@@ -88,27 +89,26 @@ async def add_mood(message: Message, state: FSMContext):
 @note_router.message(Note_state.activity)
 async def add_activity(message: Message, state: FSMContext):
     note = await state.get_data()
-    note_id=await insert_note(
+    note_id = await insert_note(
         message.from_user.id, note["sleep"], note["food"], note["mood"], message.text
     )
     await state.clear()
     text = "Запись сохранена! ✅\n" "Держи AI-рекомендацию для тебя на сегодня:\n"
     send_message = await message.answer(text=escape(text), parse_mode="HTML")
-    await get_recommendation(send_message,3,note_id)
+    await get_recommendation(send_message, 3, note_id)
 
 
-@note_router.callback_query(F.data=="get_report_week")
-async def get_report(callback:CallbackQuery):
-    text="Вот твой недельный отчёт по дневнику здоровья:\n"
+@note_router.callback_query(F.data == "get_report_week")
+async def get_report(callback: CallbackQuery):
+    text = "Вот твой недельный отчёт по дневнику здоровья:\n"
     send_message = await callback.message.answer(text=escape(text), parse_mode="HTML")
-    await get_recommendation(send_message,7,None)
+    await get_recommendation(send_message, 7, None)
 
 
-
-async def get_recommendation(message: Message,days:int,note_id:int):
+async def get_recommendation(message: Message, days: int, note_id: int):
     user = await get_user_info(message.chat.id)
     data = f"Информация о пользователе:\n - Имя: {user.name} - Возраст: {user.age}\n Записи пользователя:\n"
-    last_notes = await get_last_notes(message.chat.id,days)
+    last_notes = await get_last_notes(message.chat.id, days)
     for note in last_notes:
         data += (
             note[4].strftime("%d.%m.%y")
@@ -123,8 +123,8 @@ async def get_recommendation(message: Message,days:int,note_id:int):
             + "\n"
         )
     response = (message.text) + "\n\n"
-    async for chunk in get_content_steam(data,days):
+    async for chunk in get_content_stream(data, days):
         response += escape(chunk.text)
         await message.edit_text(text=response, parse_mode="HTML")
     if not note_id is None:
-        await insert_recom(note_id,response)
+        await insert_recom(note_id, response)
